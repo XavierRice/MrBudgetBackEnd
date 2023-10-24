@@ -20,24 +20,24 @@ function NameAlphabetSort(response, direction) {
   }
 }
 
-function MoneySort(response, selection, amount) {
+function MoneySort(response, amount, amountString) {
   let sortedTransactions;
 
-  if (selection === "gt") {
+  if (amount === "gt") {
     sortedTransactions = response.filter(
-      (transaction) => transaction.amount > amount
+      (transaction) => transaction.amountString > amountString
     );
-  } else if (selection === "gte") {
+  } else if (amount === "gte") {
     sortedTransactions = response.filter(
-      (transaction) => transaction.amount >= amount
+      (transaction) => transaction.amountString >= amountString
     );
-  } else if (selection === "lt") {
+  } else if (amount === "lt") {
     sortedTransactions = response.filter(
-      (transaction) => transaction.amount < amount
+      (transaction) => transaction.amountString < amountString
     );
-  } else if (selection === "lte") {
+  } else if (amount === "lte") {
     sortedTransactions = response.filter(
-      (transaction) => transaction.amount <= amount
+      (transaction) => transaction.amountString <= amountString
     );
   } else {
     console.log("Error");
@@ -51,7 +51,7 @@ function checkForTransactionEditKey(req, res, next) {
   let vaild = ( //typeof operator returns the varitey of the value associated with it
     (req.body.hasOwnProperty("id") && typeof req.body.id === "number") ||
     (req.body.hasOwnProperty("transaction_name") && typeof req.body.transaction_name === "string") ||
-    (req.body.hasOwnProperty("amount") && typeof req.body.amount === "number") ||
+    (req.body.hasOwnProperty("amountString") && typeof req.body.amountString === "number") ||
     (req.body.hasOwnProperty("from") && typeof req.body.from === "string") ||
     (req.body.hasOwnProperty("catagory") &&
       typeof req.body.catagory === "string")
