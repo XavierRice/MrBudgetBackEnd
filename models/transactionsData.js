@@ -47,4 +47,12 @@ module.exports = [
     from: "self",
     category: "sample catagory"
   },
+  {
+    id: 5,
+    transaction_name: "apples",
+    amount: 1,
+    date: "2 - 7 - 2023",
+    from: "self",
+    category: "sample catagory"
+  },
 ];

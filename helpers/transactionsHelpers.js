@@ -40,7 +40,7 @@ function MoneySort(response, selection, amount) {
       (transaction) => transaction.amount <= amount
     );
   } else {
-    consolen.log("Error");
+    console.log("Error");
   }
   return sortedTransactions;
 }
