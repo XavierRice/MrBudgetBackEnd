@@ -1,14 +1,29 @@
 const express = require("express");
 const transactions = express.Router();
 const transactionsArr = require("../models/transactionsData");
+const {
+  NameAlphabetSort,
+  MoneySort,
+  checkForTransactionEditKey,
+} = require("../helpers/transactionsHelpers.js");
+
 transactions.use(express.json());
 
 //ROUTES
 //=========> READ/INDEX
 transactions.get("/", (req, res, next) => {
+  const { name, amount } = req.query;
+  let response = transactionsArr.slice();
   try {
-    if (transactionsArr && transactionsArr.length > 0) {
-      res.status(200).send(transactionsArr);
+    if (name) {
+      response = NameAlphabetSort(response);
+      console.log(response);
+    } else if (amount) {
+      response = MoneySort(response, amount);
+      console.log(response);
+    }
+    if (response && response.length > 0) {
+      res.status(200).json(response);
     } else {
       res.status(420).send({ message: "Transactions were not found" });
     }
@@ -26,7 +41,7 @@ transactions.get("/:id", (req, res, next) => {
     );
     if (targetTransaction) {
       console.log(targetTransaction);
-      res.status(200).send(targetTransaction);
+      res.status(200).json(targetTransaction);
     } else {
       res.status(404).send({ message: "Couldn't find it boo" });
     }
@@ -58,7 +73,7 @@ transactions.put("/:id", (req, res, next) => {
     }
 
     transactionsArr[transIndex] = currentTransaction;
-    res.send(currentTransaction);
+    res.json(currentTransaction);
   } catch (error) {
     next(error);
   }
@@ -73,7 +88,7 @@ transactions.post("/", (req, res, next) => {
       console.log(transactionsArr);
       res.status(201).send(transactionObj);
     } else {
-      res.status(404)._construct({ message: "Transaction not created" });
+      res.status(404).json({ message: "Transaction not created" });
     }
   } catch {
     console.error(error);
@@ -90,11 +105,10 @@ transactions.delete("/:id", (req, res, next) => {
 
     if (transIndex === -1) {
       return res.status(404).send({ message: "Item not found" });
+    } else {
+      const deletedItem = transactionsArr.splice(transIndex, 1);
+      res.status(200).json(deletedItem[0]);
     }
-
-    const deletedItem = transactionsArr.splice(transIndex, 1);
-
-    res.send(deletedItem[0]);
   } catch (error) {
     next(error);
   }
