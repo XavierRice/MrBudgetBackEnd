@@ -1,14 +1,14 @@
 const express = require("express");
 const transactions = express.Router();
-const transactionArr = require("../models/transactionData");
+const transactionsArr = require("../models/transactionsData");
 transactions.use(express.json());
 
 //ROUTES
 //=========> READ/INDEX
 transactions.get("/", (req, res, next) => {
   try {
-    if (transactionArr && transactionArr.length > 0) {
-      res.status(200).send(transactionArr);
+    if (transactionsArr && transactionsArr.length > 0) {
+      res.status(200).send(transactionsArr);
     } else {
       res.status(420).send({ message: "Transactions were not found" });
     }
@@ -16,15 +16,16 @@ transactions.get("/", (req, res, next) => {
     next(error);
   }
 });
-//=========> SHOW/(BY ID)
+//=========> SHOW/(ID)
 
 transactions.get("/:id", (req, res, next) => {
   try {
     const id = req.params.id;
-    const targetTransaction = transactionArr.find(
-      trans => trans.id === parseInt(id)
+    const targetTransaction = transactionsArr.find(
+      (trans) => trans.id === parseInt(id)
     );
     if (targetTransaction) {
+      console.log(targetTransaction);
       res.status(200).send(targetTransaction);
     } else {
       res.status(404).send({ message: "Couldn't find it boo" });
@@ -34,29 +35,48 @@ transactions.get("/:id", (req, res, next) => {
   }
 });
 
-//=========> CREATE/PUT
+//=========> CREATE/UPDATE
 
 transactions.put("/:id", (req, res, next) => {
   try {
     const transactionId = parseInt(req.params.id);
     const transactionUpdate = req.body;
-    const transIndex = transactionArr.findIndex(trans => trans.id === transactionId);
+    const transIndex = transactionsArr.findIndex(
+      (trans) => trans.id === transactionId
+    );
 
     if (transIndex === -1) {
+      console.log(transactionId);
       res.status(404).send({ message: "transaction not found" });
     }
-
-    const currentTransaction = transactionArr[transIndex];
+    const currentTransaction = transactionsArr[transIndex];
 
     for (let key in transactionUpdate) {
-      if (currentTransaction.hasOwnProperty([key])) {
+      if (currentTransaction.hasOwnProperty(key)) {
         currentTransaction[key] = transactionUpdate[key];
       }
     }
 
-    transactionArr[transIndex] = currentTransaction;
+    transactionsArr[transIndex] = currentTransaction;
     res.send(currentTransaction);
   } catch (error) {
+    next(error);
+  }
+});
+//=========> CREATE/UPDATE
+
+transactions.post("/", (req, res, next) => {
+  try {
+    const transactionObj = req.body;
+    if (transactionObj) {
+      transactionsArr.push(transactionObj);
+      console.log(transactionsArr);
+      res.status(201).send(transactionObj);
+    } else {
+      res.status(404)._construct({ message: "Transaction not created" });
+    }
+  } catch {
+    console.error(error);
     next(error);
   }
 });
@@ -66,13 +86,13 @@ transactions.put("/:id", (req, res, next) => {
 transactions.delete("/:id", (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
-    const transIndex = transactionArr.findIndex((trans) => trans.id === id);
+    const transIndex = transactionsArr.findIndex((trans) => trans.id === id);
 
     if (transIndex === -1) {
       return res.status(404).send({ message: "Item not found" });
     }
 
-    const deletedItem = transactionArr.splice(transIndex, 1);
+    const deletedItem = transactionsArr.splice(transIndex, 1);
 
     res.send(deletedItem[0]);
   } catch (error) {
@@ -80,5 +100,4 @@ transactions.delete("/:id", (req, res, next) => {
   }
 });
 
-
-module.exports = transactions
+module.exports = transactions;
