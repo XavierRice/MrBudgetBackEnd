@@ -13,7 +13,7 @@ transactions.use(express.json());
 //=========> READ/INDEX
 transactions.get("/", (req, res, next) => {
   const { name, amount:amountStirng } = req.query;
-  const stringedAmount = parseFloat(amountStirng)
+  const amount = parseFloat(amountStirng)
 
   let response = transactionsArr.slice();
   try {
@@ -21,7 +21,7 @@ transactions.get("/", (req, res, next) => {
       response = NameAlphabetSort(response, name);
       console.log(response);
     } else if (amount) {
-      response = MoneySort(response, amount , stringedAmount);
+      response = MoneySort(response, amount , amount);
       console.log(response);
     }
     if (response && response.length > 0) {
