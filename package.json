@@ -4,7 +4,7 @@
   "description": "The front end for budgeting app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon server.js"
   },
   "keywords": [],

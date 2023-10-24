@@ -22,7 +22,7 @@ transactions.get("/:id", (req, res, next) => {
   try {
     const id = req.params.id;
     const targetTransaction = transactionArr.find(
-      (trans) => trans.id === parseInt(id)
+      trans => trans.id === parseInt(id)
     );
     if (targetTransaction) {
       res.status(200).send(targetTransaction);
@@ -40,9 +40,7 @@ transactions.put("/:id", (req, res, next) => {
   try {
     const transactionId = parseInt(req.params.id);
     const transactionUpdate = req.body;
-    const transIndex = transactionArr.findIndex(
-      (trans) => trans.id === transactionId
-    );
+    const transIndex = transactionArr.findIndex(trans => trans.id === transactionId);
 
     if (transIndex === -1) {
       res.status(404).send({ message: "transaction not found" });
