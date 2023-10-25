@@ -87,7 +87,7 @@ transactions.post("/", (req, res, next) => {
     const transactionObj = req.body;
     if (transactionObj) {
       transactionsArr.push(transactionObj);
-      console.log(transactionsArr);
+      console.log(transactionObj);
       res.status(201).send(transactionObj);
     } else {
       res.status(404).json({ message: "Transaction not created" });
